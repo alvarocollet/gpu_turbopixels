@@ -1,0 +1,18 @@
+<package>
+  <description brief="turbopixels">
+
+  Turbopixels on the GPU, with a ROS wrapper.
+  </description>
+
+  <author>Alvaro Collet (alvaro.collet@gmail.com)</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -Wl,-rpath,${prefix}/lib -lturbopix -lcuda /usr/local/cuda/lib64/libcudart.so" />
+  </export>
+
+  <depend package="opencv2"/>
+</package>
+
+
