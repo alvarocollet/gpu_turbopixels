@@ -90,5 +90,3 @@ code against the dynamic library libturbopixels.so.
 
 Please let me know if you find any issues with this code.
 
-Alvaro Collet
-alvaro.collet@gmail.com
