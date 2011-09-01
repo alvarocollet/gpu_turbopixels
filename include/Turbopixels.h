@@ -46,9 +46,9 @@
 namespace tpix {
 
   /**
-   * \brief Maximum number of superpixels we search for
+   * \brief Maximum number of superpixels we can ever search for
    */
-  static const int MAX_SUPERPIXELS = N_SUPERPIXELS;
+  static const int MAX_SUPERPIXELS = _MAX_SUPERPIXELS;
 
   class Turbopixels {
 
@@ -56,6 +56,7 @@ namespace tpix {
     int dev;
     int width;
     int height;
+    unsigned int nSuperpixels;
 
   public:
 
@@ -68,18 +69,22 @@ namespace tpix {
      * \brief Constructor with custom image size
      * \param width image width, in pixels
      * \param height image height, in pixels
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
      *
      */
-    Turbopixels (int width, int height);
+    Turbopixels (int width, int height, unsigned int nSuperpixels);
 
     /**
      * \brief Full constructor: custom image size, custom GPU
      * \param dev gpu device to use. use 0 if you don't care...
      * \param img_width image width, in pixels
      * \param img_height image height, in pixels
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
      *
      */
-    Turbopixels (int dev, int width, int height);
+    Turbopixels (int dev, int width, int height, unsigned int nSuperpixels);
 
     /**
      * \brief destructor.
@@ -87,25 +92,39 @@ namespace tpix {
     ~Turbopixels ();
 
     /**
-     * \brief Reshape image size. It deallocates and reallocates all memory
-     * \param width image width, in pixels
-     * \param height image height, in pixels
+     * \brief Reshape image. It deallocates and reallocates all memory
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
      * \output none
      *
      */
     void
-    reshape (int width, int height);
+    reshape (unsigned int nSuperpixels);
+
+    /**
+     * \brief Reshape image size. It deallocates and reallocates all memory
+     * \param width image width, in pixels
+     * \param height image height, in pixels
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
+     * \output none
+     *
+     */
+    void
+    reshape (int width, int height, unsigned int nSuperpixels);
 
     /**
      * \brief Reshape image size. It deallocates and reallocates all memory
      * \param dev gpu device to use. use 0 if you don't care...
      * \param img_width image width, in pixels
      * \param img_height image height, in pixels
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
      * \output none
      *
      */
     void
-    reshape (int dev, int width, int height);
+    reshape (int dev, int width, int height, unsigned int nSuperpixels);
 
     /**
      * \brief deallocate all used memory and general cleanup
@@ -116,8 +135,8 @@ namespace tpix {
 
     /**
      * \brief Process image to create superpixels
-     * \param src image is a vector of grayscale values, normalized [0,1]
-     * \param dst (output) vector of superpixel IDs, one for every pixel
+     * \param[in] src image is a vector of grayscale values, normalized [0,1]
+     * \param[out] dst vector of superpixel IDs, one for every pixel
      * \output number of iterations needed for convergence
      *
      */
@@ -126,8 +145,10 @@ namespace tpix {
 
     /**
      * \brief Process image to create superpixels
-     * \param src image is a vector of grayscale values in range [0, 255]
-     * \param dst (output) vector of superpixel IDs, one for every pixel
+     * \param[in] src image is a vector of grayscale values in range [0, 255]
+     * \param[out] dst vector of superpixel IDs, one for every pixel
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
      * \output number of iterations needed for convergence
      *
      */
@@ -136,9 +157,11 @@ namespace tpix {
 
     /**
      * \brief Process image to create superpixels
-     * \param src image is a vector of color values packed in a 64 bit int,
+     * \param[in] src image is a vector of color values packed in a 64 bit int,
      *        s.t. src[i] = {0,0,0,0,0,b,g,r}
-     * \param dst (output) vector of superpixel IDs, one for every pixel
+     * \param[out] dst vector of superpixel IDs, one for every pixel
+     * \param nSuperpixels Desired number of superpixels to compute (actual
+     *   number might vary). Default: 1000.
      * \output number of iterations needed for convergence
      *
      */

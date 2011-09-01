@@ -78,10 +78,11 @@ texture<float, 2, cudaReadModeElementType> texref_float_2d;
 texture<int, 2, cudaReadModeElementType> texref_int_2d;
 
 // Device constant memory
-__device__ __constant__ float2 d_seed_coords_const[N_SUPERPIXELS];
+__device__ __constant__ float2 d_seed_coords_const[_MAX_SUPERPIXELS];
 
 // Host globals
 //unsigned long* h_input_image;
+unsigned int N_SUPERPIXELS;
 uint64_t* h_input_image;
 unsigned long img_width;
 long img_height;
@@ -800,11 +801,18 @@ void feature_distance_transform()
 	copy_lin_to_tex(d_int2_array, d_indirection_map);
 }
 
-void _initialize(int dev, long width, long height)
+void _initialize(int dev, long width, long height, unsigned int nSuperpixels)
 {
 	// Prep the device
   InitDevice(dev);
-  
+
+  // Verify that number of superpixels is not too large
+  if (nSuperpixels > _MAX_SUPERPIXELS){
+      fprintf(stderr, "Error: nSuperpixels > MAX_SUPERPIXELS.\n");       
+      exit(EXIT_FAILURE);                                                  
+  }else
+    N_SUPERPIXELS = nSuperpixels; 
+
   img_width = width;
   img_height = height;
   img_realpixels = img_width*img_height;
@@ -937,7 +945,6 @@ int extractSuperpixels(unsigned int* output, T* input_img)
   cutCreateTimer(&timer);
 	cutStartTimer(timer);
   */
-
   int iter;
 	prepare_image(input_img);
 	calc_speed_based_on_gradient();	

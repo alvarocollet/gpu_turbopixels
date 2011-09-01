@@ -44,9 +44,8 @@
 
 #include <stdint.h>
 
-// I know, it's a disgrace that N_SUPERPIXELS is not configurable, but whoever
-// did the internal turbopixels code didn't think about this.
-#define N_SUPERPIXELS 1000
+// The maximum number of superpixels you can ever get is 8192 (64KB of type float2).
+#define _MAX_SUPERPIXELS 8000
 #define DEBUG_IMG false
 #define MAX_ITERATIONS 500
 
@@ -57,7 +56,7 @@ template <typename T>
 int extractSuperpixelsWithTiming(unsigned int* output, T* input_img);
 
 // Initialize arrays (should be called in constructor)
-void _initialize(int dev, long img_width, long img_height);
+void _initialize(int dev, long img_width, long img_height, unsigned int nSuperpixels);
 
 // Free arrays (should be called in destructor)
 void _cleanup();

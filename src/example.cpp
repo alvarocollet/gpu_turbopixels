@@ -48,23 +48,30 @@
 
 int main(int argc, char** argv){
 
-  tpix::Turbopixels tpix;
   unsigned long* h_input_image;
   unsigned long img_width;
   long img_height;
   long img_pitch;
+  unsigned int nSuperpixels;
 
-	if (argc < 2)
+	if (argc < 3)
 	{
-		printf ("Usage: %s <input image>\n", argv[0]);
+		printf ("Usage: %s <input image> <nSuperpixels>\n", argv[0]);
 		return 0;
 	}
 
+  // Load image
   cv::Mat img;
   img = cv::imread(argv[1], 0);
   cv::Size sz = img.size();
   img_width = sz.width;
   img_height = sz.height;
+
+  // Read number of superpixels (max is 8192)
+  nSuperpixels = atoi(argv[2]);
+
+  // Initialize Turbopixels 
+  tpix::Turbopixels tpix(img_width, img_height, nSuperpixels);
 
   unsigned long img_size = img_width*img_height;
   std::vector<unsigned int> out(img_size);
